@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html ng-app="nameApp" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Library Application</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.2.0/css/bootstrap.min.css"
+              th:href="@{/webjars/bootstrap/3.2.0/css/bootstrap.min.css}"
+              rel="stylesheet" media="screen" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
+        <script src="js/server.js"></script>
+        <style>
+            .modal-header, h4, .close {
+                background-color: #5cb85c;
+                color:white !important;
+                text-align: center;
+                font-size: 30px;
+            }
+            .modal-footer {
+                background-color: #f9f9f9;
+            }
+        </style>
+    </head>
+    <body ng-controller="nameCtrl">
+
+        <div class="container">
+            <h2>LIBRARY AUTOMATION</h2>
+            <!-- Trigger the modal with a button -->
+
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#insertModal">NEW BOOK</button>
+
+            
+
+            <table class="table table-bordered" >
+
+                <tr>
+                    
+                    <th>BOOK NAME</th>
+                    <th>AUTHOR NAME</th>
+                    <th>EDIT</th>
+                    <th>DELETE</th>
+
+                </tr>
+                <tr ng-repeat="item in Items">
+                    
+                    <td>{{item.bookname}}</td>
+                    <td>{{item.author}}</td>
+                    <td><button type="button" class="btn btn-info btn-md" id="edit" data-toggle="modal" data-target="#updatemodal"
+                                ng-click="getrowdata(item)">EDIT</button></td>
+                    <td> <button type="button" class="btn btn-danger bbtn-md" id="delete" data-toggle="modal" data-target="#deletemodal"
+                                 ng-click="editData.row=item">DELETE</button></td>
+                </tr>
+
+            </table>
+             <!--  İnsert Modal -->
+            <div class="modal fade" id="insertModal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">NEW BOOK</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" data-toggle="validator" role="form" novalidate="true" name="myform"   >
+                                <fieldset>
+                                    <!-- Text input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Book Name</label>  
+                                        <div class="col-md-4">
+                                            <input id="Bookname" name="bookname" type="text" placeholder="bookname" class="form-control input-md" ng-model="bookname" required="true"/>
+                                          <span style="color:red" ng-show="myform.bookname.$dirty  &amp; myform.bookname.$invalid"/>
+                                           <span ng-show="myform.bookname.$error.required">Field is required</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Text input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="Book Author">Book Author</label>  
+                                        <div class="col-md-4">
+                                            <input id="BookAuthor" name="BookAuthor" type="text" placeholder="bookauthor" class="form-control input-md" ng-model="author" required="true"/>
+                                             <span style="color:red" ng-show="myform.BookAuthor.$dirty  &amp; myform.BookAuthor.$invalid"/>
+                                          <span ng-show="myform.BookAuthor.$error.required">Field is required</span>
+
+                                        </div>
+                                    </div>
+                                    
+                                </fieldset>
+                                <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button type="reset" value="Reset" class="btn btn-default">Reset</button>
+                                        <button type="button" class="btn btn-default" ng-click = "create()" ng-disabled="myform.bookname.$dirty  &amp; myform.bookname.$invalid ||  myform.BookAuthor.$dirty  &amp; myform.BookAuthor.$invalid">Create</button>
+                                    </div>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Delete Modal -->
+            <div class="modal fade" id="deletemodal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Delete Selected Book</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Click Delete Button And Remove Item</p>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click = "bookdelete()">Delete</button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <!-- Update Modal -->
+            <div class="modal fade" id="updatemodal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Edit Selected Book</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" data-toggle="validator" role="form" novalidate="true" name="myForm" >
+                                <fieldset>
+                                    <!-- Text input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Book Name</label>  
+                                        <div class="col-md-4">
+                                            <input id="Bookname" name="bookname" type="text" class="form-control input-md" ng-model="updatebookname"  required="true"/>
+                                            <span style="color:red" ng-show="myForm.bookname.$dirty  &amp; myForm.bookname.$invalid"/>
+                                           <span ng-show="myForm.bookname.$error.required">Field is required</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Text input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="Book Author">Book Author</label>  
+                                        <div class="col-md-4">
+                                            <input id="Book Author" name="BookAuthor" type="text" class="form-control input-md" ng-model="updateauthor"  required="true"/>
+                                          <span style="color:red" ng-show="myForm.BookAuthor.$dirty  &amp; myForm.BookAuthor.$invalid"/>
+                                          <span ng-show="myForm.BookAuthor.$error.required">Field is required</span>
+                                        </div>
+                                    </div>
+                                    
+                                </fieldset>
+                                <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button type="reset" value="Reset" class="btn btn-default">Reset</button>
+                                        <button type="button" class="btn btn-default" ng-click = "update()" ng-disabled="myForm.bookname.$dirty  &amp; myForm.bookname.$invalid ||  myForm.BookAuthor.$dirty  &amp; myForm.BookAuthor.$invalid">Update</button>
+                                    </div>
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </body>
+</html>

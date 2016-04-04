@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Title: spring-rest
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: Recep ￃﾇoban
+Implementation-Vendor-Id: com.recepcoban
+Build-Jdk: 1.8.0_51
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+
